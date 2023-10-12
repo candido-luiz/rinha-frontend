@@ -1,5 +1,5 @@
 <template>
-  <div class="start-container">
+  <div v-if="!fileContent" class="start-container">
     <h1 class="application-name">JSON Tree Viewer</h1>
     <div class="application-description">
       Simple JSON Viewer that runs completely on-client. No data exchange
@@ -19,19 +19,32 @@
       @change="handleFile"
     >
   </div>
+  <div v-else class="start-container">
+    <TreeTest
+      :itemContent="fileContent"
+    />
+    <!-- <div v-if="Array.isArray(fileContent)">
+    <TreeTest
+      v-for="(viewItem, index) in fileContent"
+      :key="index"
+      :itemContent="viewItem"
+    />
+    </div>
+
+    <div v-else>
+
+    </div> -->
+  </div>
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
+import { ref } from "vue";
+import TreeTest from "./components/TreeTest.vue";
 
 const invalidFile = ref(false);
 const fileInput = ref(null);
 const fileContent = ref(null);
 const selectedFileName = ref("");
-
-watch(fileContent, (newFileContent) => {
-  console.log(newFileContent)
-})
 
 function triggerFileInput(){
   const inputElement = fileInput.value;
@@ -74,7 +87,7 @@ function handleFile(){
 <style>
 .start-container{
   display: flex;
-  height: 100vh;
+  min-height: 100vh;
   padding: 102px 46px;
   flex-direction: column;
   justify-content: center;
