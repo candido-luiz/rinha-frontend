@@ -22,32 +22,50 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 
 const invalidFile = ref(false);
 const fileInput = ref(null);
-
+const fileContent = ref(null);
 const selectedFileName = ref("");
+
+watch(fileContent, (newFileContent) => {
+  console.log(newFileContent)
+})
 
 function triggerFileInput(){
   const inputElement = fileInput.value;
   if(inputElement) {
     inputElement.click();
   }
-}
+} 
 
 function handleFile(){
-  const files = fileInput.value.files;
-  if(files){
+  const files = fileInput.value.files || [];
+  if(files.length){
     const selectedFile = files[0];
     const fileBlob = new Blob([selectedFile], {type: "application/json"})
+
     const fr = new FileReader();
+
     fr.onload = function() {
-      console.log(this.result);
+      if(this.result){
+        try {
+          const parsedFile = JSON.parse(this.result);
+          fileContent.value = parsedFile;
+          invalidFile.value = false;
+        }
+        catch(error){
+          console.error(error);
+          invalidFile.value = true;
+          fileContent.value = null;
+        }
+      }
     }
+
     fr.readAsText(fileBlob)
-    selectedFileName.value = selectedFile.name;
-    console.log(files[0]);
+
+    selectedFileName.value = selectedFile?.name;
   }
 }
 
