@@ -5,21 +5,52 @@
       Simple JSON Viewer that runs completely on-client. No data exchange
     </div>
     <div>
-      <button class="load-json-button">Load JSON</button>
+      <button @click="triggerFileInput" class="load-json-button">Load JSON</button>
     </div>
-    <div class="invalid-file-message">
+    <div v-if="invalidFile" class="invalid-file-message">
       Invalid file. Please load a valid JSON file.
     </div>
+    <input 
+      ref="fileInput" 
+      class="hiddenInput" 
+      type="file" 
+      name="jsonFile" 
+      id="json_file_input"
+      @change="handleFile"
+    >
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref } from "vue";
+
+const invalidFile = ref(false);
+const fileInput = ref(null);
+
+const selectedFileName = ref("");
+
+function triggerFileInput(){
+  const inputElement = fileInput.value;
+  if(inputElement) {
+    inputElement.click();
+  }
+}
+
+function handleFile(){
+  const files = fileInput.value.files;
+  if(files){
+    const selectedFile = files[0];
+    selectedFileName.value = selectedFile.name;
+    console.log(files[0]);
+  }
+}
 
 </script>
 
 <style>
 .start-container{
   display: flex;
+  height: 100vh;
   padding: 102px 46px;
   flex-direction: column;
   justify-content: center;
@@ -48,7 +79,11 @@
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
-  line-height: normal; 
+  line-height: normal;
+  border-radius: 5px;
+  /* border: 1px solid #000;
+  opacity: 0.7;
+  background: linear-gradient(180deg, #E4E4E4 0%, #F7F7F7 100%); */
 }
 .invalid-file-message{
   color: #BF0E0E;
@@ -57,5 +92,8 @@
   font-style: normal;
   font-weight: 400;
   line-height: normal; 
+}
+.hiddenInput{
+  display: none;
 }
 </style>
