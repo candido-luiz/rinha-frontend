@@ -16,15 +16,17 @@
         </ul>
     </li>
 
-    <ul v-else>
-      
+    <li v-else>
+      {{ itemKey }}
+      <ul>
         <TreeTest
           v-for="(viewItem, index) in itemContent"
           :key="index"
           :itemContent="viewItem"
           :itemIndex="index"
         />
-    </ul>
+      </ul>
+    </li>
   
 </template>
 
