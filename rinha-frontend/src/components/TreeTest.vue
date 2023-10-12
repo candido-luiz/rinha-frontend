@@ -39,9 +39,12 @@ const contentIsArray = computed(() => {
   return Array.isArray(props.itemContent)
 })
 
+const contentIsObject = computed(() => {
+  return (props.itemContent !== null && typeof props.itemContent === 'object')
+})
+
 const contentIsPrimitive = computed(() => {
-  //Ainda vou incluir a chegagem de valor null
-  return !(contentIsArray.value || typeof props.itemContent === 'object')
+  return !(contentIsArray.value || contentIsObject.value)
 })
 
 </script>
