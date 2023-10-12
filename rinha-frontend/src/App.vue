@@ -40,6 +40,12 @@ function handleFile(){
   const files = fileInput.value.files;
   if(files){
     const selectedFile = files[0];
+    const fileBlob = new Blob([selectedFile], {type: "application/json"})
+    const fr = new FileReader();
+    fr.onload = function() {
+      console.log(this.result);
+    }
+    fr.readAsText(fileBlob)
     selectedFileName.value = selectedFile.name;
     console.log(files[0]);
   }
