@@ -1,30 +1,39 @@
 <template>
-  <div v-if="contentIsPrimitive">
-      {{ itemKey }} : {{ itemContent }}
-  </div>
+  
+    <li v-if="contentIsPrimitive">
+        {{ contentText }}
+    </li>
 
-  <div v-else-if="!contentIsArray">
-    <TreeTest
-      v-for="(itemKey, index) in Object.keys(itemContent)"
-      :key="index"
-      :itemKey="itemKey"
-      :itemContent="itemContent[itemKey]"
-    />
-  </div>
+    <li v-else-if="!contentIsArray">
+        {{ itemKey }}
+        <ul>
+          <TreeTest
+            v-for="(itemKey, index) in Object.keys(itemContent)"
+            :key="index"
+            :itemKey="itemKey"
+            :itemContent="itemContent[itemKey]"
+          />
+        </ul>
+    </li>
 
-  <div v-else>
-    <TreeTest
-      v-for="(viewItem, index) in itemContent"
-      :key="index"
-      :itemContent="viewItem"
-    />
-  </div>
+    <ul v-else>
+      
+        <TreeTest
+          v-for="(viewItem, index) in itemContent"
+          :key="index"
+          :itemContent="viewItem"
+          :itemIndex="index"
+        />
+    </ul>
+  
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { computed, defineComponent } from 'vue';
 
-
+defineComponent({
+  name: "TreeTeste"
+})
 const props = defineProps({
   itemKey: {
     type: String,
@@ -32,7 +41,11 @@ const props = defineProps({
   },
   itemContent: {
     default: null
-  }
+  },
+  itemIndex: {
+    type: Number,
+    default: 0
+  },
 });
 
 const contentIsArray = computed(() => {
@@ -45,6 +58,13 @@ const contentIsObject = computed(() => {
 
 const contentIsPrimitive = computed(() => {
   return !(contentIsArray.value || contentIsObject.value)
+})
+
+const contentText = computed(() => {
+  if(contentIsPrimitive.value) {
+    return props.itemKey ? `${props.itemKey}: ${props.itemContent}` : `${props.itemContent}`
+  }
+  return ""
 })
 
 </script>

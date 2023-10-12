@@ -20,25 +20,29 @@
     >
   </div>
   <div v-else class="start-container">
-    <TreeTest
-      :itemContent="fileContent"
-    />
-    <!-- <div v-if="Array.isArray(fileContent)">
-    <TreeTest
-      v-for="(viewItem, index) in fileContent"
-      :key="index"
-      :itemContent="viewItem"
-    />
-    </div>
+    <ul>
+      <div v-if="Array.isArray(fileContent)">
+      
+        <TreeTest
+          v-for="(viewItem, index) in fileContent"
+          :key="index"
+          :itemContent="viewItem"
+          :itemIndex="index"
+        />
+      
+      </div>
 
-    <div v-else>
-
-    </div> -->
+      <div v-else>
+        <TreeTest
+          :itemContent="fileContent"
+        />
+      </div>
+    </ul>
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import TreeTest from "./components/TreeTest.vue";
 
 const invalidFile = ref(false);
@@ -46,12 +50,17 @@ const fileInput = ref(null);
 const fileContent = ref(null);
 const selectedFileName = ref("");
 
+watch(fileContent, (newFileContent) => {
+  console.log(newFileContent)
+  console.log(JSON.stringify(newFileContent))
+})
+
 function triggerFileInput(){
   const inputElement = fileInput.value;
   if(inputElement) {
     inputElement.click();
   }
-} 
+}
 
 function handleFile(){
   const files = fileInput.value.files || [];
